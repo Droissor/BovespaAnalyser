@@ -16,18 +16,15 @@ def main():
     writer.export_to_csv('the_little_book_rank', ranks[1])
 
 def rank_papers(papers):
-    papers =  filter(minimal_liquitidy_and_ebit_filter, papers)
+    papers = filter(minimal_liquitidy_and_ebit_filter, papers)
 
-    the_little_book_rank = sorted(copy.deepcopy(papers), key=calculate_magic_number)
-    value_investing_rank = sorted(copy.deepcopy(papers), key=lambda paper: paper.get_enterprise_value_per_earning(), reverse=True)
+    the_little_book_rank = sorted(copy.deepcopy(papers), key=lambda paper: paper.get_magic_number())
+    value_investing_rank = sorted(copy.deepcopy(papers), key=lambda paper: paper.get_enterprise_value_per_earning())
 
     return [the_little_book_rank, value_investing_rank]
 
 def minimal_liquitidy_and_ebit_filter(paper):
     return paper.liquidity >= MINIMAL_LIQUIDITY and paper.earnings_before_interest_and_taxes > 0
-
-def calculate_magic_number(paper):
-    return paper.return_on_invested_capital * paper.get_earnings_yield()
 
 if __name__ == "__main__":
 	main()
