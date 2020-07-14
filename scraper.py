@@ -2,68 +2,68 @@
 
 import sys
 import writer
-from urllib.request import urlopen
+from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup # sudo apt-get install python3-bs4
 from re import compile
 from paper import Paper
 from time import sleep
 
-FUNDAMENTUS_URL = 'https://www.fundamentus.com.br/'
-FUNDAMENTUS_DETAILS = 'detalhes.php'
-FUNDAMENTUS_DETAILS_URL = FUNDAMENTUS_URL + FUNDAMENTUS_DETAILS
-FUNDAMENTUS_DETAILS_PAPER_URL = FUNDAMENTUS_DETAILS_URL + '?papel='
+
+FUNDAMENTUS_URL ='https://www.fundamentus.com.br/resultado.php'
+header = {'User-Agent': 'Mozilla/5.0'}
 
 WAITING_TIME = 1 # Strongly recommend not to decrease this value, we do not want to harm those who help us
 
 CODE_INDEX = 1
-EBIT_INDEX = 106
-LIQUIDITY_INDEX = 19
-ENTERPRISE_VALUE_INDEX = 21
-ROIC_INDEX = 64
+EV_PER_EBIT_INDEX = 21
+LIQUIDITY_INDEX = 35
+ROIC_INDEX = 31
+ROE_INDEX = 33
 
 def fetch_papers():
-    page = urlopen(FUNDAMENTUS_DETAILS_URL)
+    
+    req = Request(FUNDAMENTUS_URL, headers=header)
+    page = urlopen(req)
 
     soup = BeautifulSoup(page, 'html.parser')
+    paper_rows = soup.find_all(["tr"])
 
-    papers_sumary = soup.find_all(__has_not_class_attr, href=compile(FUNDAMENTUS_DETAILS))
+    __discartTableHeader(paper_rows)
+
     papers = []
 
-    for idx, paper_sumary in enumerate(papers_sumary, start=1):
-        paperHref = paper_sumary.attrs['href']
-        papers.append(__detailer(FUNDAMENTUS_URL + paperHref))
-        print("Progress: " + str(idx) + "/" + str(len(papers_sumary)) + "\n")
-        sleep(WAITING_TIME)
+    for idx, paper_row in enumerate(paper_rows, start=1):
+        papers.append(__detailer(paper_row.contents))
+        print("Progress: " + str(idx) + "/" + str(len(paper_rows)) + "\n")
 
     return papers
 
-def __detailer(url):
+def __detailer(paper_detail):
 
-    print("Detailing " + url)
+    code = paper_detail[CODE_INDEX].text.replace('.', '')
+    print("Detailing " + code)
 
     try:
-        page = urlopen(url)
-        soup = BeautifulSoup(page, 'html.parser')
-        paper_details = soup.find_all('span', attrs={'class': 'txt'})
+        ev_per_ebit = float(paper_detail[EV_PER_EBIT_INDEX].text.replace('.', '').replace(',', '.'))
 
-        code = paper_details[CODE_INDEX].text.replace('.', '')
-
-        ebit = int(paper_details[EBIT_INDEX].text.replace('.', ''))
-
-        enterprise_value = int(paper_details[ENTERPRISE_VALUE_INDEX].text.replace('.', ''))
-
-        roic_text = paper_details[ROIC_INDEX].text.replace('\n', '').replace(' ', '').replace(',', '.').replace('%', '')
+        roic_text = paper_detail[ROIC_INDEX].text.replace('\n', '').replace('.', '').replace(' ', '').replace(',', '.').replace('%', '')
         roic = float(roic_text)/100 if(roic_text != '-') else 0
 
-        liquidity = int(paper_details[LIQUIDITY_INDEX].text.replace('.', ''))
+        roe_text = paper_detail[ROE_INDEX].text.replace('\n', '').replace('.', '').replace(' ', '').replace(',', '.').replace('%', '')
+        roe = float(roe_text)/100 if(roe_text != '-') else 0
 
-        return Paper(code, ebit, enterprise_value, roic, liquidity)
+        liquidity = int(paper_detail[LIQUIDITY_INDEX].text.replace('.', '').replace(',', ''))/100
+
+        return Paper(code, ev_per_ebit, roic, roe, liquidity)
 
     except:
-        print("Couldn't detail " + url)
-        writer.log_error(url, str(sys.exc_info()[0]))
+        print("Couldn't detail " + code)
+        writer.log_error(code, str(sys.exc_info()[0]))
 
-        return Paper(url, 0, 0, 0, 0)
+        return Paper(code, 0, 0, 0, 0)
+
+def __discartTableHeader(paper_rows):
+    paper_rows.pop(0)
 
 def __has_not_class_attr(tag):
     return not tag.has_attr('class')
