@@ -7,9 +7,3 @@ class Paper:
         self.return_on_invested_capital = return_on_invested_capital
         self.return_on_equity = return_on_equity
         self.liquidity = liquidity
-
-    def get_enterprise_value_per_earning(self):
-        return self.enterprise_value_per_earning
-
-    def get_magic_number(self):
-        return round(self.enterprise_value_per_earning / self.return_on_invested_capital, 4)

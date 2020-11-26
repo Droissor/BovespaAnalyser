@@ -6,17 +6,17 @@ from paper import Paper
 from time import sleep
 from datetime import datetime
 
-def export_to_csv(filename, papers_rank):
+def export_to_csv(filename, paper_rank_list):
 
     local_dir = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
     with open(os.path.join(local_dir, filename + '.csv'), 'w') as csv_file:    
         writer = csv.writer(csv_file)
-        writer.writerow(['RANK','RANK POINTS','PAPER CODE', 'EV/EBIT', 'RETURN ON EQUITY (ROE)','RETURN ON INVESTED CAPITAL (ROIC)','LIQUIDITY LAST 2 MONTHS'])
+        writer.writerow(['RANK','RANK POINTS (0 is better)','PAPER CODE', 'EV/EBIT', 'RETURN ON EQUITY (ROE)','RETURN ON INVESTED CAPITAL (ROIC)','LIQUIDITY LAST 2 MONTHS'])
         
-        for idx, paper in enumerate(papers_rank, start=1):
-            writer.writerow([idx, paper.get_magic_number(), paper.code, paper.enterprise_value_per_earning,
-                            paper.return_on_equity, paper.return_on_invested_capital, paper.liquidity])
+        for idx, paper_rank in enumerate(paper_rank_list, start=1):
+            writer.writerow([idx, paper_rank[1], paper_rank[0].code, paper_rank[0].enterprise_value_per_earning,
+                            paper_rank[0].return_on_equity, paper_rank[0].return_on_invested_capital, paper_rank[0].liquidity])
 
 def log_error(url, err):
 
