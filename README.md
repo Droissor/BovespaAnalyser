@@ -13,4 +13,4 @@ Para melhorar a qualidade do relatório, alguns uns filtros são aplicados:
 
 Esses filtros são arbitrários e podem ser alterados.
 
-Projeto tem carater de aprendizado e faz uma analise quantitativa com extrema dependência da fonte dos dados.
+**Projeto tem carater de aprendizado e faz uma analise quantitativa com extrema dependência da fonte dos dados.**
