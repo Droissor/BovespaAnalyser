@@ -14,3 +14,8 @@ Para melhorar a qualidade do relatório, alguns uns filtros são aplicados:
 Esses filtros são arbitrários e podem ser alterados.
 
 **Projeto tem caráter de aprendizado e faz uma análise quantitativa com extrema dependência da fonte dos dados.**
+
+## Como executar
+```bash
+python3 main.py
+```
