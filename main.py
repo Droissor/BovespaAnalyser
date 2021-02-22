@@ -42,7 +42,7 @@ def minimal_liquitidy_ebit_roe_filter(paper):
     return paper.liquidity >= MINIMAL_LIQUIDITY and paper.enterprise_value_per_earning > 0 and paper.return_on_equity >= 0.10
 
 def paper_code_number_filter(paper):
-    return '3' in paper.code or '4' in paper.code
+    return '3' in paper.code or '4' in paper.code or '11' in paper.code
 
 if __name__ == "__main__":
 	main()
