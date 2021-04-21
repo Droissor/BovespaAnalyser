@@ -10,6 +10,7 @@ from time import sleep
 
 
 FUNDAMENTUS_URL ='https://www.fundamentus.com.br/resultado.php'
+FUNDAMENTUS_PAPER_DETAIL_URL ='https://www.fundamentus.com.br/detalhes.php?papel='
 header = {'User-Agent': 'Mozilla/5.0'}
 
 WAITING_TIME = 1 # Strongly recommend not to decrease this value, we do not want to harm those who help us
@@ -54,7 +55,13 @@ def __detailer(paper_detail):
 
         liquidity = int(paper_detail[LIQUIDITY_INDEX].text.replace('.', '').replace(',', ''))/100
 
-        return Paper(code, ev_per_ebit, roic, roe, liquidity)
+        detailsPage = urlopen(Request(FUNDAMENTUS_PAPER_DETAIL_URL+code, headers=header))
+        soup = BeautifulSoup(detailsPage, 'html.parser')
+        paperDetails = soup.find_all(["td"])
+        setor = paperDetails[13].contents[0].string
+        subSetor = paperDetails[17].contents[0].string
+
+        return Paper(code, ev_per_ebit, roic, roe, liquidity, setor, subSetor)
 
     except:
         print("Couldn't detail " + code)

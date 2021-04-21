@@ -19,8 +19,8 @@ def rank_papers(papers):
     papers = list(filter(paper_code_number_filter, papers))
     papers = list(filter(minimal_liquitidy_ebit_roe_filter, papers))
 
-    roic_rank = sorted(copy.deepcopy(papers), key=lambda paper: paper.return_on_invested_capital, reverse=True)
-    earnings_yield_rank = sorted(copy.deepcopy(papers), key=lambda paper: paper.enterprise_value_per_earning)
+    roic_rank = sorted(papers.copy(), key=lambda paper: paper.return_on_invested_capital, reverse=True)
+    earnings_yield_rank = sorted(papers.copy(), key=lambda paper: paper.enterprise_value_per_earning)
 
     value_investing_rank = []
 
