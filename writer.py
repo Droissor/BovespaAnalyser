@@ -10,7 +10,7 @@ def export_to_csv(filename, paper_rank_list):
 
     local_dir = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-    with open(os.path.join(local_dir, filename + '.csv'), 'w') as csv_file:    
+    with open(os.path.join(local_dir, filename + '.csv'), 'w', newline='') as csv_file:    
         writer = csv.writer(csv_file)
         writer.writerow(['RANK','RANK POINTS (0 is better)','PAPER CODE', 'EV/EBIT', 'RETURN ON EQUITY (ROE)','RETURN ON INVESTED CAPITAL (ROIC)','LIQUIDITY LAST 2 MONTHS', 'SETOR', 'SUBSETOR'])
         

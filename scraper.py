@@ -67,7 +67,7 @@ def __detailer(paper_detail):
         print("Couldn't detail " + code)
         writer.log_error(code, str(sys.exc_info()[0]))
 
-        return Paper(code, 0, 0, 0, 0)
+        return Paper(code, 0, 0, 0, 0, "", "")
 
 def __discartTableHeader(paper_rows):
     paper_rows.pop(0)

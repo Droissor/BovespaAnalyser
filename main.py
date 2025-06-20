@@ -2,6 +2,7 @@
 
 import copy
 from paper import Paper
+import time
 import scraper
 import writer
 
@@ -12,7 +13,8 @@ def main():
     
     ranks = rank_papers(papers)
 
-    writer.export_to_csv('value_investing_rank', ranks)
+    timemillis = int(time.time() * 1000)
+    writer.export_to_csv('value_investing_rank_' + str(timemillis), ranks)
 
 def rank_papers(papers):
 
